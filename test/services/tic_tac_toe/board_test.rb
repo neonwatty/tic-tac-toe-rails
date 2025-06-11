@@ -43,4 +43,52 @@ class TicTacToe::BoardTest < ActiveSupport::TestCase
     @board[0, 0] = 'X'
     refute @board.full?
   end
+
+  test "valid_move? returns true for empty cell in bounds" do
+    assert @board.valid_move?(1, 1)
+  end
+
+  test "valid_move? returns false for out of bounds cell" do
+    refute @board.valid_move?(-1, 0)
+    refute @board.valid_move?(0, 3)
+  end
+
+  test "valid_move? returns false for occupied cell" do
+    @board[0, 0] = 'X'
+    refute @board.valid_move?(0, 0)
+  end
+
+  test "make_move only sets cell if valid and returns true, else false" do
+    assert @board.make_move(0, 0, 'X')
+    assert_equal 'X', @board[0, 0]
+    refute @board.make_move(0, 0, 'O')
+    refute @board.make_move(3, 3, 'O')
+  end
+
+  test "winner returns X for row win" do
+    3.times { |c| @board[0, c] = 'X' }
+    assert_equal 'X', @board.winner
+  end
+
+  test "winner returns O for column win" do
+    3.times { |r| @board[r, 1] = 'O' }
+    assert_equal 'O', @board.winner
+  end
+
+  test "winner returns X for diagonal win (\)" do
+    3.times { |i| @board[i, i] = 'X' }
+    assert_equal 'X', @board.winner
+  end
+
+  test "winner returns O for diagonal win (/)" do
+    3.times { |i| @board[i, 2 - i] = 'O' }
+    assert_equal 'O', @board.winner
+  end
+
+  test "winner returns nil if no winner" do
+    @board[0, 0] = 'X'
+    @board[0, 1] = 'O'
+    @board[0, 2] = 'X'
+    assert_nil @board.winner
+  end
 end 
