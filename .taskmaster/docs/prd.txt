@@ -1,0 +1,74 @@
+<context>
+# Overview  
+A simple but beautiful Tic-Tac-Toe game built with Ruby on Rails 8. The app is designed for quick, enjoyable play, offering both single-player (vs AI) and real-time two-player modes. It aims to provide a seamless experience for casual players and competitive users alike, with a focus on ease of use, attractive design (Tailwind CSS), and engaging features like player history and high scores.
+
+# Core Features  
+- **User Registration**: Simple sign-up process to get players started quickly. Essential for tracking player stats and enabling multiplayer features.
+- **Single Player Mode (vs AI)**: Play against an AI opponent with selectable difficulty (easy, medium, hard). Lets users practice and enjoy the game solo.
+- **Two Player Mode (Real-Time)**: Two human players can play against each other in real time from separate devices, using Rails Action Cable for live updates. Enables social and competitive play.
+- **Player History**: Each player can view their own game history, including wins, losses, and draws. Encourages engagement and replayability.
+- **High Score List**: Displays top human players by games played and total wins. Adds a competitive element and motivation to play more.
+- **Modern Styling**: Uses Tailwind CSS for a clean, responsive, and visually appealing UI.
+
+# User Experience  
+- **Personas**: Casual gamers, competitive players, and anyone looking for a quick, fun game.
+- **Key Flows**:
+  - Register/log in
+  - Choose single or two player mode
+  - Play a game (vs AI or human)
+  - View personal stats/history
+  - Check high score list
+- **UI/UX**: Fast onboarding, minimal clicks to start a game, clear feedback, and mobile-friendly design.
+</context>
+<PRD>
+# Technical Architecture  
+- **System Components**:
+  - Rails 8 backend (API + Action Cable for real-time)
+  - Tailwind CSS for frontend styling
+  - Simple user authentication (using Rails 8 built in authentication)
+  - Game logic for Tic-Tac-Toe (including AI)
+- **Data Models**:
+  - User (id, email, password, stats)
+  - Game (id, player1_id, player2_id/ai, moves, result, timestamps)
+  - HighScore (user_id, games_played, wins)
+- **APIs/Integrations**:
+  - RESTful endpoints for user, game, and score management
+  - Action Cable channels for real-time two-player games
+- **Infrastructure**:
+  - Standard Rails/Sqlite3 stack
+  - Deployed on a platform like Render, Heroku, or Fly.io
+
+# Development Roadmap  
+- **MVP**:
+  - User registration/login
+  - Single player mode (easy AI)
+  - Two player mode (real-time, basic matchmaking)
+  - Game result tracking
+  - Player history view
+  - High score list
+  - Tailwind CSS styling
+- **Future Enhancements**:
+  - AI difficulty levels (medium, hard)
+  - Enhanced player stats (streaks, win rates)
+  - Game replays
+  - Social features (friend invites, chat)
+
+# Logical Dependency Chain
+- Set up Rails 8 project and Tailwind CSS
+- Implement user registration/authentication
+- Build game logic and models
+- Add single player mode (easy AI)
+- Add two player mode with Action Cable
+- Implement player history and high score features
+- Polish UI/UX with Tailwind
+- Add advanced AI and future features
+
+# Risks and Mitigations  
+- **Real-time multiplayer complexity**: Use Rails Action Cable and start with a simple implementation.
+- **AI difficulty**: Begin with a basic AI, then incrementally improve.
+- **User engagement**: Focus on fast onboarding and attractive UI.
+
+# Appendix  
+- Reference: https://tailwindcss.com/
+- Reference: https://guides.rubyonrails.org/action_cable_overview.html
+</PRD> 
