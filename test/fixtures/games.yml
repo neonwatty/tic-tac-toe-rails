@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  player1: one
+  player2: one
+  moves: 
+  result: MyString
+  status: 1
+  difficulty_level: MyString
+
+two:
+  player1: two
+  player2: two
+  moves: 
+  result: MyString
+  status: 1
+  difficulty_level: MyString

@@ -10,7 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_11_153757) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_11_162112) do
+  create_table "games", force: :cascade do |t|
+    t.integer "player1_id", null: false
+    t.integer "player2_id"
+    t.json "moves"
+    t.string "result"
+    t.integer "status"
+    t.string "difficulty_level"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["player1_id"], name: "index_games_on_player1_id"
+    t.index ["player2_id"], name: "index_games_on_player2_id"
+  end
+
+  create_table "high_scores", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "game_id", null: false
+    t.integer "score"
+    t.string "difficulty_level"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_high_scores_on_game_id"
+    t.index ["user_id"], name: "index_high_scores_on_user_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "ip_address"
@@ -25,8 +49,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_11_153757) do
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "username"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "games", "users", column: "player1_id"
+  add_foreign_key "games", "users", column: "player2_id"
+  add_foreign_key "high_scores", "games"
+  add_foreign_key "high_scores", "users"
   add_foreign_key "sessions", "users"
 end
