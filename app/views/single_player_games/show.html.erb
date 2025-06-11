@@ -1,0 +1,51 @@
+<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
+  <h1 class="text-2xl font-bold mb-4 text-center">Single Player Tic-Tac-Toe</h1>
+
+  <div class="mb-4 flex justify-between items-center">
+    <span class="text-gray-700">Current turn:
+      <% if @game_state.status == :in_progress %>
+        <span class="font-semibold"><%= @game_state.current_player == 'X' ? 'You (X)' : 'AI (O)' %></span>
+      <% else %>
+        <span class="font-semibold">Game Over</span>
+      <% end %>
+    </span>
+    <form action="<%= new_single_player_game_path %>" method="post">
+      <%= button_to 'Restart Game', new_single_player_game_path, method: :post, class: 'bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-1 px-3 rounded', form_class: 'inline' %>
+    </form>
+  </div>
+
+  <div class="mb-4 flex justify-center space-x-4">
+    <div class="bg-green-100 text-green-800 px-3 py-1 rounded">Wins: <%= @stats[:wins] %></div>
+    <div class="bg-red-100 text-red-800 px-3 py-1 rounded">Losses: <%= @stats[:losses] %></div>
+    <div class="bg-gray-100 text-gray-800 px-3 py-1 rounded">Draws: <%= @stats[:draws] %></div>
+  </div>
+
+  <div class="grid grid-cols-3 gap-2 mb-4">
+    <% @game_state.board.to_a.each_with_index do |row, r| %>
+      <% row.each_with_index do |cell, c| %>
+        <%= form_with url: single_player_game_path, method: :post, local: true do |f| %>
+          <%= hidden_field_tag :row, r %>
+          <%= hidden_field_tag :col, c %>
+          <button type="submit" class="w-16 h-16 text-2xl font-bold border rounded bg-gray-100 hover:bg-blue-100 disabled:bg-gray-200 disabled:text-gray-400"
+            <% if cell.present? || @game_state.status != :in_progress || @game_state.current_player != 'X' %>disabled<% end %>>
+            <%= cell || '' %>
+          </button>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="text-center mt-4">
+    <% if @game_state.status == :completed %>
+      <% if @game_state.winner == 'X' %>
+        <span class="text-green-600 font-bold">You win!</span>
+      <% elsif @game_state.winner == 'O' %>
+        <span class="text-red-600 font-bold">AI wins!</span>
+      <% else %>
+        <span class="text-gray-700 font-bold">It's a draw!</span>
+      <% end %>
+    <% elsif @game_state.current_player == 'O' && @game_state.status == :in_progress %>
+      <span class="text-blue-500">AI is thinking...</span>
+    <% end %>
+  </div>
+</div> 
