@@ -1,0 +1,28 @@
+<div class="grid grid-cols-3 gap-2 mb-4">
+  <% @game_state.board.to_a.each_with_index do |row, r| %>
+    <% row.each_with_index do |cell, c| %>
+      <%= form_with url: single_player_game_path, method: :post, local: true do |f| %>
+        <%= hidden_field_tag :row, r %>
+        <%= hidden_field_tag :col, c %>
+        <button id="cell-<%= r %>-<%= c %>" type="submit" class="w-16 h-16 text-2xl font-bold border rounded bg-gray-100 hover:bg-blue-100 disabled:bg-gray-200 disabled:text-gray-400"
+          <% if cell.present? || @game_state.status != :in_progress || @game_state.current_player != 'X' %>disabled<% end %>>
+          <%= cell || '' %>
+        </button>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+
+<div class="text-center mt-4">
+  <% if @game_state.status == :completed %>
+    <% if @game_state.winner == 'X' %>
+      <span class="text-green-600 font-bold">You win!</span>
+    <% elsif @game_state.winner == 'O' %>
+      <span class="text-red-600 font-bold">AI wins!</span>
+    <% end %>
+  <% elsif @game_state.status == :draw %>
+    <span class="text-gray-700 font-bold">It's a draw!</span>
+  <% elsif @game_state.current_player == 'O' && @game_state.status == :in_progress %>
+    <span class="text-blue-500">AI is thinking...</span>
+  <% end %>
+</div> 

@@ -4,30 +4,34 @@ class SinglePlayerGamesController < ApplicationController
   before_action :load_stats, only: [:show, :create]
 
   def new
-    reset_game_state
-    redirect_to single_player_game_path
+    # Just render the start screen
   end
 
   def show
-    # Renders the game board and state
+    # Renders the game board and state as a full page
   end
 
   def create
-    row = params[:row].to_i
-    col = params[:col].to_i
-    player = @game_state.current_player
-    if @game_state.status == :in_progress && @game_state.current_player == 'X'
-      @game_state.make_move(row, col)
-      # AI's turn if game still in progress
-      if @game_state.status == :in_progress && @game_state.current_player == 'O'
-        ai = TicTacToe::AiPlayer.new(difficulty: :easy)
-        ai_move = ai.choose_move(@game_state.board.to_a, 'O')
-        @game_state.make_move(*ai_move) if ai_move
+    if params[:row] && params[:col]
+      load_game_state
+      row = params[:row].to_i
+      col = params[:col].to_i
+      if @game_state.status == :in_progress && @game_state.current_player == 'X'
+        @game_state.make_move(row, col)
+        # AI move if game still in progress
+        if @game_state.status == :in_progress && @game_state.current_player == 'O'
+          ai = TicTacToe::AiPlayer.new(difficulty: :easy)
+          ai_move = ai.choose_move(@game_state.board.to_a, 'O')
+          @game_state.make_move(*ai_move) if ai_move
+        end
       end
+      update_stats_if_game_over
+      save_game_state
+      redirect_to single_player_game_path
+    else
+      reset_game_state
+      redirect_to single_player_game_path
     end
-    update_stats_if_game_over
-    save_game_state
-    redirect_to single_player_game_path
   end
 
   private
@@ -43,6 +47,7 @@ class SinglePlayerGamesController < ApplicationController
 
   def save_game_state
     session[:single_player_game_state] = @game_state.to_h
+    Rails.logger.debug "[DEBUG] save_game_state: #{session[:single_player_game_state].inspect}"
   end
 
   def reset_game_state
@@ -55,7 +60,7 @@ class SinglePlayerGamesController < ApplicationController
   end
 
   def update_stats_if_game_over
-    return unless @game_state.status == :completed
+    return unless @game_state.status == :completed || @game_state.status == :draw
     load_stats
     case @game_state.winner
     when 'X'
@@ -66,5 +71,6 @@ class SinglePlayerGamesController < ApplicationController
       @stats['draws'] += 1
     end
     session[:single_player_stats] = @stats
+    Rails.logger.debug "[DEBUG] update_stats_if_game_over: #{session[:single_player_stats].inspect}"
   end
 end 

@@ -1,6 +1,6 @@
 <div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
   <h1 class="text-2xl font-bold mb-4 text-center">Single Player Tic-Tac-Toe</h1>
-  <form action="<%= single_player_game_path %>" method="get">
+  <%= form_with url: single_player_game_path, method: :post, local: true, data: { turbo: false } do %>
     <div class="mb-4">
       <label class="block text-gray-700 mb-2">Difficulty</label>
       <select class="w-full border rounded px-3 py-2" disabled>
@@ -9,5 +9,5 @@
       <p class="text-xs text-gray-500 mt-1">(More difficulties coming soon)</p>
     </div>
     <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Start Game</button>
-  </form>
+  <% end %>
 </div> 

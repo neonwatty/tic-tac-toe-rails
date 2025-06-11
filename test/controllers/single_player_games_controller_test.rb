@@ -27,9 +27,11 @@ class SinglePlayerGamesControllerTest < ActionDispatch::IntegrationTest
   test "game completion updates some stat" do
     get new_single_player_game_path
     follow_redirect!
-    # Play moves until the game is over (max 9 moves)
-    9.times do |i|
+    move_count = 0
+    loop do
       state = session[:single_player_game_state]
+      stats = session[:single_player_stats]
+      puts "DEBUG: move \\#{move_count} state: \\#{state.inspect} stats: \\#{stats.inspect}"
       break if state['status'] == 'completed' || state['status'] == 'draw' || state['board'].nil?
       empty = []
       if state['board']
@@ -37,16 +39,18 @@ class SinglePlayerGamesControllerTest < ActionDispatch::IntegrationTest
         move = empty.first
         post single_player_game_path, params: { row: move[0], col: move[1] }
         follow_redirect!
+        move_count += 1
       end
     end
     state = session[:single_player_game_state]
-    puts "DEBUG: final board: #{state['board'].inspect}"
-    puts "DEBUG: final status: #{state['status'].inspect}"
-    unless state['status'] == 'completed' || state['status'] == 'draw'
-      flunk "Game did not complete. Final status: #{state['status'].inspect}, board: #{state['board'].inspect}"
-    end
     stats = session[:single_player_stats]
+    puts "DEBUG: final state: \\#{state.inspect}"
+    puts "DEBUG: final stats: \\#{stats.inspect}"
+    puts "DEBUG: response body: \\#{response.body[0..500]}"
+    unless state['status'] == 'completed' || state['status'] == 'draw'
+      flunk "Game did not complete. Final status: \\#{state['status'].inspect}, board: \\#{state['board'].inspect}"
+    end
     # At least one stat should have incremented
-    assert stats.values.any? { |v| v > 0 }, "Expected at least one stat to increment, got: #{stats.inspect}"
+    assert stats.values.any? { |v| v > 0 }, "Expected at least one stat to increment, got: \\#{stats.inspect}"
   end
 end 
