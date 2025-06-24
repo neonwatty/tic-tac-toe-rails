@@ -3,6 +3,10 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   resource :single_player_game, only: [:new, :show, :create]
+  resources :two_player_games, only: [:new, :create, :show] do
+    post 'move', on: :member
+    post 'join', on: :member
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -15,4 +19,6 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   root "sessions#new"
+
+  mount ActionCable.server => '/cable'
 end

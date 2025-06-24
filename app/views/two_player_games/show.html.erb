@@ -1,0 +1,28 @@
+<% if @game.player2.nil? && @game.player1 != current_user %>
+  <%= form_with url: join_two_player_game_path(@game), method: :post, local: true do %>
+    <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mb-4">Join Game</button>
+  <% end %>
+<% end %>
+
+<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow" data-controller="game" data-game-game-id-value="<%= @game.id %>">
+  <h1 class="text-2xl font-bold mb-4 text-center">Two Player Tic-Tac-Toe</h1>
+
+  <div class="mb-4 flex justify-between items-center">
+    <span class="text-gray-700" data-game-target="status" id="game-status">
+      Current turn: <%= @game.current_player %>
+    </span>
+  </div>
+
+  <div class="grid grid-cols-3 gap-2 mb-4">
+    <% @game.board.to_a.each_with_index do |row, r| %>
+      <% row.each_with_index do |cell, c| %>
+        <%= form_with url: move_two_player_game_path(@game, row: r, col: c), method: :post, local: true do |f| %>
+          <button id="cell-<%= r %>-<%= c %>" type="submit" class="w-16 h-16 text-2xl font-bold border rounded bg-gray-100 hover:bg-blue-100 disabled:bg-gray-200 disabled:text-gray-400"
+            <% if cell.present? || @game.status != :in_progress || @game.current_player != current_user.symbol %>disabled<% end %>>
+            <%= cell || '' %>
+          </button>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+</div> 

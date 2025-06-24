@@ -1,0 +1,9 @@
+<div class="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
+  <h1 class="text-2xl font-bold mb-4 text-center">Start a New Two Player Game</h1>
+  <% if flash[:alert] %>
+    <div class="bg-red-100 text-red-800 px-3 py-2 rounded mb-4"><%= flash[:alert] %></div>
+  <% end %>
+  <%= form_with url: two_player_games_path, method: :post, local: true, data: { turbo: false } do %>
+    <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Start New Game</button>
+  <% end %>
+</div> 

@@ -5,6 +5,12 @@ class ApplicationController < ActionController::Base
 
   before_action :set_current_session
 
+  helper_method :current_user
+
+  def current_user
+    Current.user
+  end
+
   private
 
   def set_current_session
